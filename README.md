@@ -2,7 +2,7 @@
 
 This is a modified clone of the OpenAI API [quickstart tutorial](https://platform.openai.com/docs/quickstart). It uses the [Next.js](https://nextjs.org/) framework with [React](https://reactjs.org/). Check out the tutorial or follow the instructions below to get set up.
 
-![UI Form](https://raw.githubusercontent.com/brandonburkett/openai-nextjs/master/gh-screenshot.webp)
+![UI Form](https://raw.githubusercontent.com/brandonburkett/openai-nextjs/master/gh-screenshot.png)
 
 
 ## Setup
