@@ -7,7 +7,13 @@ const configuration = new Configuration({
 const openai = new OpenAIApi(configuration);
 
 /**
- * Endpoint
+ * OpenAI createChatCompletion endpoint
+ *
+ * DOCS
+ * @see https://platform.openai.com/docs/api-reference/chat
+ *
+ * PRICING
+ * @see https://platform.openai.com/docs/models/gpt-3
  */
 export default async function (req, res) {
   if (!configuration.apiKey) {
@@ -18,22 +24,29 @@ export default async function (req, res) {
     });
   }
 
-  // TODO: input validation
-  console.log(req.body);
-  return res.status(500).json({ error: { message: 'Not implemented' } });
+  // TODO: actual validation
+  const model = ['gpt-3.5-turbo', 'text-davinci-003'].includes(req.body.model) ? req.body.model : 'gpt-3.5-turbo';
+  const temperature = parseFloat(req.body.temperature);
+  const systemMsg = req.body.systemMsg || '';
+  const userMsg = req.body.userMsg || '';
 
   try {
     const completion = await openai.createChatCompletion({
-      // pricing; https://platform.openai.com/docs/models/gpt-3
-      // model: "text-davinci-003",
-      model: req.body.model, // $0.0005 / 1K tokens
-      prompt: generatePrompt(req.text),
-      temperature: req.body.temperature, // variation
+      // see pricing in openai docs
+      model: model,
+
+      // 0 - 2 in steps of 0.1 - determines randomness / variation
+      temperature: temperature,
+
+      messages: [
+          {'role': 'system', 'content': systemMsg},
+          {"role": 'user', 'content': userMsg},
+      ]
     });
 
     console.log(completion);
 
-    return res.status(200).json({ result: completion.data.choices[0].text, raw: completion });
+    return res.status(200).json({ choice: completion.data.choices[0], raw: completion.data });
   } catch(error) {
     // Consider adjusting the error handling logic for your use case
     if (error.response) {
@@ -48,17 +61,4 @@ export default async function (req, res) {
       }
     });
   }
-}
-
-function generatePrompt(animal) {
-  const capitalizedAnimal =
-    animal[0].toUpperCase() + animal.slice(1).toLowerCase();
-  return `Suggest three names for an animal that is a superhero.
-
-Animal: Cat
-Names: Captain Sharpclaw, Agent Fluffball, The Incredible Feline
-Animal: Dog
-Names: Ruff the Protector, Wonder Canine, Sir Barks-a-Lot
-Animal: ${capitalizedAnimal}
-Names:`;
 }

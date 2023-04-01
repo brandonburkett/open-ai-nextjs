@@ -9,8 +9,9 @@ export default function Home() {
     systemMsg: '',
     userMsg: '',
   });
-  const [result, setResult] = useState();
+  const [result, setResult] = useState(null);
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const updateFormData = (field, value) => {
     setFormData({
@@ -22,6 +23,9 @@ export default function Home() {
   async function onSubmit(event) {
     event.preventDefault();
     setError('');
+    setLoading(true);
+    setResult(null);
+
     try {
       const response = await fetch("/api/generate", {
         method: "POST",
@@ -36,11 +40,13 @@ export default function Home() {
         throw data.error || new Error(`Request failed with status ${response.status}`);
       }
 
-      setResult(data.result);
+      setResult(data);
     } catch(error) {
       // Consider implementing your own error handling logic here
       console.error(error);
       setError(error.message);
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -52,9 +58,9 @@ export default function Home() {
       </Head>
 
       <main className={styles.main}>
-        <h3>OpenAI Chat Endpoint</h3>
+        <h1>OpenAI Chat Endpoint</h1>
         {/* error */}
-        {error && <div className={styles.error}>{error}</div>}
+        {error && <div className={styles.error} aria-live="polite" role="alert">{error}</div>}
 
         {/* form */}
         <form onSubmit={onSubmit}>
@@ -64,6 +70,7 @@ export default function Home() {
             aria-label="Select InstructGPT Model"
             onChange={(e) => updateFormData('model', e.target.value)}
           >
+            <option value="">Select One</option>
             <option value="gpt-3.5-turbo">gpt-3.5-turbo</option>
             <option value="text-davinci-003">text-davinci-003</option>
           </select>
@@ -71,8 +78,8 @@ export default function Home() {
             className={styles.input}
             type="number"
             name="temperature"
-            placeholder="Temperature"
-            step="1"
+            placeholder="Temperature (0-2, steps of 0.1)"
+            step="0.1"
             onChange={(e) => updateFormData('temperature', e.target.value)}
           />
           <textarea
@@ -91,11 +98,20 @@ export default function Home() {
             value={formData.text}
             onChange={(e) => updateFormData('userMsg', e.target.value)}
           ></textarea>
-          <input type="submit" value="Submit" />
+          <button type="submit" className={styles['btn-submit']} disabled={loading}>
+            {loading ? 'Processing...' : 'Submit' }
+          </button>
         </form>
 
         {/* result */}
-        <div className={styles.result}>{result}</div>
+        {result ? (
+          <div class={styles.response}>
+            <h2>Response</h2>
+            <div className={styles.result}>{result?.choice?.message?.content || 'Missing message content'}</div>
+            <pre className={styles.code}>{JSON.stringify(result?.raw || {}, null, 2)}</pre>
+          </div>
+        ) : null}
+
       </main>
     </div>
   );
