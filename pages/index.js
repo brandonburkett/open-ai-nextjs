@@ -54,7 +54,7 @@ export default function Home() {
     <div>
       <Head>
         <title>OpenAI Chat Endpoint</title>
-        <link rel="icon" href="/kamon.webp" />
+        <link rel="icon" href="/favicon.ico" />
       </Head>
 
       <main className={styles.main}>
