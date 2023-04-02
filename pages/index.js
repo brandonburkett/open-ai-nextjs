@@ -107,7 +107,16 @@ export default function Home() {
         {result ? (
           <div class={styles.response}>
             <h2>Response</h2>
-            <div className={styles.result}>{result?.choice?.message?.content || 'Missing message content'}</div>
+            <div className={styles.result}>
+              {(result?.choice?.message?.content || 'Missing message content').split('\n').map((text) => (
+                <>
+                  {text}
+                  <br />
+                </>
+              ))}
+            </div>
+
+            <h3>JSON</h3>
             <pre className={styles.code}>{JSON.stringify(result?.raw || {}, null, 2)}</pre>
           </div>
         ) : null}
