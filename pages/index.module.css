@@ -94,6 +94,11 @@
   cursor: pointer;
 }
 
+.btn-submit:disabled {
+  background-color: #8e8ea0;
+  cursor: not-allowed;
+}
+
 .error {
   display: flex;
   justify-content: center;

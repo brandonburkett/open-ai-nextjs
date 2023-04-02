@@ -72,7 +72,7 @@ export default function Home() {
           >
             <option value="">Select One</option>
             <option value="gpt-3.5-turbo">gpt-3.5-turbo</option>
-            <option value="text-davinci-003">text-davinci-003</option>
+            <option value="gpt-4">gpt-4</option>
           </select>
           <input
             className={styles.input}
@@ -105,7 +105,7 @@ export default function Home() {
 
         {/* result */}
         {result ? (
-          <div class={styles.response}>
+          <div className={styles.response}>
             <h2>Response</h2>
             <div className={styles.result}>
               {(result?.choice?.message?.content || 'Missing message content').split('\n').map((text) => (

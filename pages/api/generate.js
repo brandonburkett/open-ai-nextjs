@@ -25,7 +25,7 @@ export default async function (req, res) {
   }
 
   // TODO: actual validation
-  const model = ['gpt-3.5-turbo', 'text-davinci-003'].includes(req.body.model) ? req.body.model : 'gpt-3.5-turbo';
+  const model = ['gpt-3.5-turbo', 'gpt-4'].includes(req.body.model) ? req.body.model : 'gpt-3.5-turbo';
   const temperature = parseFloat(req.body.temperature);
   const systemMsg = req.body.systemMsg || '';
   const userMsg = req.body.userMsg || '';
