@@ -118,5 +118,6 @@
   margin: 1rem;
   background-color: lightgrey;
   border-radius: 4px;
+  white-space: pre-wrap;
 }
 
